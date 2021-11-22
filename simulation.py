@@ -40,14 +40,14 @@ class Simulation(object):
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
         self.logger = Logger('LOG_FILE')
-        self.population = self._create_population() # List of Person objects
         self.pop_size = pop_size # Int
         self.next_person_id = 0 # Int
         self.virus = virus # Virus object
         self.initial_infected = initial_infected # Int
+        self.vacc_percentage = vacc_percentage # float between 0 and 1
+        self.population = self._create_population(self.initial_infected) # List of Person objects
         self.total_infected = 0 # Int
         self.current_infected = 0 # Int
-        self.vacc_percentage = vacc_percentage # float between 0 and 1
         self.total_dead = 0 # Int
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
             virus_name, pop_size, vacc_percentage, initial_infected)
@@ -71,15 +71,25 @@ class Simulation(object):
         # people vaccinated, correct number of initially infected people).
 
         
-        vaccinated = self.pop_size * self.vacc_percentage
-        initial_infected
+        vaccinated = int(self.pop_size * self.vacc_percentage)
         remainder = self.pop_size - vaccinated - initial_infected
 
         for i in range(vaccinated):
-            people.append(Person(i, True, None))
+            people.append(Person(i + 1, True, None))
         
         for i in range(initial_infected):
-            people.append(Person(i, False, Virus))
+            people.append(Person(1 + len(people), False, self.virus))
+
+        for i in range(remainder):
+            people.append(Person(1 + len(people), False, None))
+
+        # Randomly shuffle the list of people
+        random.shuffle(people)
+
+        # Just to show the population: 
+        for person in people:
+            print(person._id, person.is_vaccinated, person.infection)
+
 
         """ Of the self.pop_size , 100,000 TOTAL
         get the self.vacc_percentage - should be vaccinated Person's 0.90
@@ -190,7 +200,9 @@ if __name__ == "__main__":
         initial_infected = 1
 
     virus = Virus(virus_name, repro_rate, mortality_rate)
-    sim = Simulation(pop_size, vacc_percentage, initial_infected, virus)
+    sim = Simulation(virus, pop_size, vacc_percentage, initial_infected)
 
     sim.run()
 
+
+# RUN THIS TEST: python3 simulation.py 100000 0.90 Ebola 0.70 0.25 10
