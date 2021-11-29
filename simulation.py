@@ -1,5 +1,3 @@
-# https://github.com/stanjdev/Herd-Immunity-Simulation
-
 import random, sys
 random.seed(42)
 from person import Person
@@ -86,9 +84,9 @@ class Simulation(object):
         # Randomly shuffle the list of people
         random.shuffle(people)
 
-        # Just to show the population: 
-        for person in people:
-            print(person._id, person.is_vaccinated, person.infection)
+        # # Just to show the population: 
+        # for person in people:
+        #     print(person._id, person.is_vaccinated, person.infection)
 
 
         """ Of the self.pop_size , 100,000 TOTAL
@@ -100,7 +98,6 @@ class Simulation(object):
         And lastly, final remainder is uninfected and unvaccinated. 9990 people
         
         """
-
         # Use the attributes created in the init method to create a population that has
         # the correct initial vaccination percentage and initial infected.
         return people 
@@ -112,8 +109,8 @@ class Simulation(object):
             Returns:
                 bool: True for simulation should continue, False if it should end.
         '''
-        # TODO: Complete this helper method.  Returns a Boolean.
-        pass
+        # TODO: Complete this helper method. Returns a Boolean.
+        return self.vacc_percentage < 1 or len(self.population) == self.total_dead
 
     def run(self):
         ''' This method should run the simulation until all requirements for ending
@@ -127,20 +124,23 @@ class Simulation(object):
         # HINT: You may want to call the logger's log_time_step() method at the end of each time step.
         # TODO: Set this variable using a helper
         time_step_counter = 0
-        should_continue = None
+        # should_continue = None
+        should_continue = self._simulation_should_continue()
 
         while should_continue:
             # TODO: for every iteration of this loop, call self.time_step() to compute another
             # round of this simulation.
-            print(f'The simulation has ended after {time_step_counter} turns.')
+            self.time_step()
+            time_step_counter += 1
             pass
+        print(f'The simulation has ended after {time_step_counter} turns.')
 
     def time_step(self):
         ''' This method should contain all the logic for computing one time step
         in the simulation.
 
         This includes:
-            1. 100 total interactions with a randon person for each infected person
+            1. 100 total interactions with a random person for each infected person
                 in the population
             2. If the person is dead, grab another random person from the population.
                 Since we don't interact with dead people, this does not count as an interaction.
@@ -148,6 +148,15 @@ class Simulation(object):
                 increment interaction counter by 1.
             '''
         # TODO: Finish this method.
+        for person in self.population:
+            if person.infection:
+                for interaction in range(100):
+                    random_person = random.choice(self.population)
+                    while not random_person.is_alive:
+                        random_person = random.choice(self.population)
+                    self.interaction(person, random_person)
+        
+        self._infect_newly_infected()
         pass
 
     def interaction(self, person, random_person):
@@ -174,12 +183,27 @@ class Simulation(object):
             #     than repro_rate, random_person's ID should be appended to
             #     Simulation object's newly_infected array, so that their .infected
             #     attribute can be changed to True at the end of the time step.
-        # TODO: Call slogger method during this method.
+        if random_person.is_vaccinated:
+            pass
+        if random_person.infection:
+            pass
+        if not random_person.infection and not random_person.is_vaccinated:
+            randNum = random.uniform(0, 1)
+            if randNum < person.infection.repro_rate:
+                self.newly_infected.append(random_person._id)
+        
+        # TODO: Call logger method during this method.
         pass
 
     def _infect_newly_infected(self):
         ''' This method should iterate through the list of ._id stored in self.newly_infected
         and update each Person object with the disease. '''
+        print(self.newly_infected)
+        for id in self.newly_infected:
+            for person in self.population:
+                if person._id == id:
+                    person.infection = self.virus
+        self.newly_infected = []
         # TODO: Call this method at the end of every time step and infect each Person.
         # TODO: Once you have iterated through the entire list of self.newly_infected, remember
         # to reset self.newly_infected back to an empty list.
@@ -206,3 +230,6 @@ if __name__ == "__main__":
 
 
 # RUN THIS TEST: python3 simulation.py 100000 0.90 Ebola 0.70 0.25 10
+
+
+

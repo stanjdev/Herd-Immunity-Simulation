@@ -1,0 +1,16 @@
+To-do:
+
+- create_population
+
+self.dead_population = [] list, loop and skip dead people later on. tip from George 
+
+https://github.com/stanjdev/Herd-Immunity-Simulation
+https://github.com/Tech-at-DU/Herd-Immunity-Simulation#questions-and-answers-about-the-problem - UPDATED SPECS
+
+
+Doing:
+
+
+
+
+Done:
