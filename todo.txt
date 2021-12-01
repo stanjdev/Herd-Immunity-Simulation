@@ -1,6 +1,7 @@
 To-do:
 
 - create_population
+- update counters and percentage vaxxed as time steps are going along
 
 self.dead_population = [] list, loop and skip dead people later on. tip from George 
 

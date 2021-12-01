@@ -16,3 +16,9 @@ def test_virus_instantiation():
     assert virus.mortality_rate == 0.3
 
 
+if __name__ == "__main__":
+    test_virus_instantiation()
+    cold = Virus('Cold', 0.4, 0.03)
+    print(f"name {cold.name} should be cold")
+
+

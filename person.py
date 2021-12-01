@@ -91,3 +91,10 @@ def test_did_survive_infection():
         assert person.is_vaccinated is False
         assert person.infection is not None
 
+
+if __name__ == "__main__":
+    test_vacc_person_instantiation()
+    test_not_vacc_person_instantiation()
+    test_sick_person_instantiation()
+    test_did_survive_infection()
+

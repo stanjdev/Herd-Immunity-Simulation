@@ -43,10 +43,10 @@ class Simulation(object):
         self.virus = virus # Virus object
         self.initial_infected = initial_infected # Int
         self.vacc_percentage = vacc_percentage # float between 0 and 1
-        self.population = self._create_population(self.initial_infected) # List of Person objects
         self.total_infected = 0 # Int
         self.current_infected = 0 # Int
         self.total_dead = 0 # Int
+        self.population = self._create_population(self.initial_infected) # List of Person objects
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
             virus_name, pop_size, vacc_percentage, initial_infected)
         self.newly_infected = []
@@ -69,20 +69,23 @@ class Simulation(object):
         # people vaccinated, correct number of initially infected people).
 
         
-        vaccinated = int(self.pop_size * self.vacc_percentage)
-        remainder = self.pop_size - vaccinated - initial_infected
+        # vaccinated = int(self.pop_size * self.vacc_percentage)
+        # remainder = self.pop_size - vaccinated - initial_infected
+        remainder = self.pop_size - initial_infected
+        print('remainders', remainder)
 
-        for i in range(vaccinated):
-            people.append(Person(i + 1, True, None))
+        # for i in range(vaccinated):
+        #     people.append(Person(i + 1, True, None))
         
         for i in range(initial_infected):
+            self.total_infected += 1
             people.append(Person(1 + len(people), False, self.virus))
 
         for i in range(remainder):
             people.append(Person(1 + len(people), False, None))
 
         # Randomly shuffle the list of people
-        random.shuffle(people)
+        # random.shuffle(people)
 
         # # Just to show the population: 
         # for person in people:
@@ -110,13 +113,13 @@ class Simulation(object):
                 bool: True for simulation should continue, False if it should end.
         '''
         # TODO: Complete this helper method. Returns a Boolean.
-        return self.vacc_percentage < 1 or len(self.population) == self.total_dead
+        return self.vacc_percentage < 1 or len(self.population) == self.total_infected
 
     def run(self):
         ''' This method should run the simulation until all requirements for ending
         the simulation are met.
         '''
-        # TODO: Finish this method.  To simplify the logic here, use the helper method
+        # TODO: Finish this method. To simplify the logic here, use the helper method
         # _simulation_should_continue() to tell us whether or not we should continue
         # the simulation and run at least 1 more time_step.
 
@@ -127,10 +130,14 @@ class Simulation(object):
         # should_continue = None
         should_continue = self._simulation_should_continue()
 
-        while should_continue:
+        while time_step_counter < 1:
             # TODO: for every iteration of this loop, call self.time_step() to compute another
             # round of this simulation.
             self.time_step()
+            print('Time step:', time_step_counter)
+            # for person in self.population:
+            #     if person.infection:
+            #         print(person.infection)
             time_step_counter += 1
             pass
         print(f'The simulation has ended after {time_step_counter} turns.')
@@ -152,12 +159,11 @@ class Simulation(object):
             if person.infection:
                 for interaction in range(100):
                     random_person = random.choice(self.population)
-                    while not random_person.is_alive:
+                    while not random_person.is_alive or random_person._id == person._id:
                         random_person = random.choice(self.population)
                     self.interaction(person, random_person)
         
         self._infect_newly_infected()
-        pass
 
     def interaction(self, person, random_person):
         '''This method should be called any time two living people are selected for an
@@ -171,7 +177,6 @@ class Simulation(object):
         # in as params
         assert person.is_alive == True
         assert random_person.is_alive == True
-
         # TODO: Finish this method.
         #  The possible cases you'll need to cover are listed below:
             # random_person is vaccinated:
@@ -183,17 +188,20 @@ class Simulation(object):
             #     than repro_rate, random_person's ID should be appended to
             #     Simulation object's newly_infected array, so that their .infected
             #     attribute can be changed to True at the end of the time step.
-        if random_person.is_vaccinated:
+
+        # print(person, random_person.is_vaccinated, random_person.infection)
+        if random_person.is_vaccinated or random_person.infection:
             pass
-        if random_person.infection:
-            pass
-        if not random_person.infection and not random_person.is_vaccinated:
+            # print('is vacxxxed or already infected!')
+        # if random_person.infection == None and random_person.is_vaccinated == False:
+        else:
             randNum = random.uniform(0, 1)
+            # print(randNum)
             if randNum < person.infection.repro_rate:
                 self.newly_infected.append(random_person._id)
+                self.total_infected += 1
         
         # TODO: Call logger method during this method.
-        pass
 
     def _infect_newly_infected(self):
         ''' This method should iterate through the list of ._id stored in self.newly_infected
@@ -207,7 +215,6 @@ class Simulation(object):
         # TODO: Call this method at the end of every time step and infect each Person.
         # TODO: Once you have iterated through the entire list of self.newly_infected, remember
         # to reset self.newly_infected back to an empty list.
-        pass
 
 
 if __name__ == "__main__":
@@ -230,6 +237,14 @@ if __name__ == "__main__":
 
 
 # RUN THIS TEST: python3 simulation.py 100000 0.90 Ebola 0.70 0.25 10
+# Smaller test: python3 simulation.py 100 0.90 Ebola 0.70 0.25 1
 
-
+""" 
+Population Size: 100,000
+Vaccination Percentage: 90%
+Virus Name: Ebola
+Mortality Rate: 70%
+Reproduction Rate: 25%
+People Initially Infected: 10
+ """
 
