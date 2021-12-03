@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Logger(object):
     ''' Utility class responsible for logging all interactions during the simulation. '''
     # TODO: Write a test suite for this class to make sure each method is working
@@ -7,12 +9,10 @@ class Logger(object):
     # test them one by one as you write your class.
 
     def __init__(self, file_name):
-        # TODO:  Finish this initialization method. The file_name passed should be the
-        # full file name of the file that the logs will be written to.
         self.file_name = file_name
 
     def write_metadata(self, pop_size, vacc_percentage, virus_name, mortality_rate,
-                       basic_repro_num):
+                       repro_rate):
         '''
         The simulation class should use this method immediately to log the specific
         parameters of the simulation as the first line of the file.
@@ -23,7 +23,17 @@ class Logger(object):
         # the 'a' mode to append a new log to the end, since 'w' overwrites the file.
         # NOTE: Make sure to end every line with a '/n' character to ensure that each
         # event logged ends up on a separate line!
-        pass
+        now = datetime.now()
+        dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+
+        file = open(self.file_name, 'w')
+        file.write(f'-----------HERD IMMUNITY SIMULATION {dt_string}------------\n')
+        file.write('\n')
+        file.write(f'Population Size: {pop_size} | Initially Vaccinated %: {vacc_percentage * 100} | Virus: {virus_name} | Mortality Rate: {mortality_rate} | Reproductive Rate: {repro_rate}\n')
+        file.write('\n')
+        file.close()
+
+        
 
     def log_interaction(self, person, random_person, random_person_sick=None,
                         random_person_vacc=None, did_infect=None):
@@ -73,4 +83,15 @@ class Logger(object):
         # new one begins.
         # NOTE: Here is an opportunity for a stretch challenge!
         pass
+
+
+
+
+if __name__ == '__main__':
+    myLogger = Logger('answers.txt')
+    myLogger.write_metadata(100, 0.10, 'Ebola', 0.70, 0.25,)
+    # myLogger.log_interaction()
+    # myLogger.log_infection_survival()
+    # myLogger.log_time_step()
+
 

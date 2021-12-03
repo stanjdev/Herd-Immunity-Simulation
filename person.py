@@ -1,5 +1,5 @@
 import random
-random.seed(42)
+# random.seed(42)
 from virus import Virus
 
 
@@ -25,13 +25,15 @@ class Person(object):
         If Person survives, they become vaccinated and they have no infection.
         Return a boolean value indicating whether they survived the infection.
         '''
-        if self.infection is not None: 
+        if self.infection: 
             randNum = random.uniform(0, 1)
             if (randNum < self.infection.mortality_rate):
+                # DIED FROM INFECTION
                 self.is_alive = False
                 self.infection = False
                 return self.is_alive
             else: 
+                # SURVIVED! Immune.
                 self.is_vaccinated = True
                 self.infection = None
         return self.is_alive

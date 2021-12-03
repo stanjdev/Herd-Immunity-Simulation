@@ -1,5 +1,5 @@
 import random, sys
-random.seed(42)
+# random.seed(42)
 from person import Person
 from logger import Logger
 from virus import Virus
@@ -14,7 +14,7 @@ class Simulation(object):
     infected people in a population are all variables that can be set when the program is run.
     '''
 
-    def __init__(self, virus, pop_size, vacc_percentage, initial_infected=1):
+    def __init__(self, pop_size, vacc_percentage, virus, initial_infected=1):
         ''' Logger object logger records all events during the simulation.
         Population represents all Persons in the population.
         The next_person_id is the next available id for all created Persons,
@@ -37,19 +37,20 @@ class Simulation(object):
         # TODO: Store each newly infected person's ID in newly_infected attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.logger = Logger('LOG_FILE')
+        self.logger = Logger('answers.txt')
         self.pop_size = pop_size # Int
         self.next_person_id = 0 # Int
         self.virus = virus # Virus object
         self.initial_infected = initial_infected # Int
         self.vacc_percentage = vacc_percentage # float between 0 and 1
+        self.total_vaccinated = int(self.pop_size * self.vacc_percentage)
         self.total_infected = 0 # Int
-        self.current_infected = 0 # Int
         self.total_dead = 0 # Int
         self.population = self._create_population(self.initial_infected) # List of Person objects
         self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
             virus_name, pop_size, vacc_percentage, initial_infected)
         self.newly_infected = []
+        self.dead_population = [] # tip 
 
     def _create_population(self, initial_infected):
         '''This method will create the initial population.
@@ -69,13 +70,13 @@ class Simulation(object):
         # people vaccinated, correct number of initially infected people).
 
         
-        # vaccinated = int(self.pop_size * self.vacc_percentage)
-        # remainder = self.pop_size - vaccinated - initial_infected
-        remainder = self.pop_size - initial_infected
-        print('remainders', remainder)
+        vaccinated = int(self.pop_size * self.vacc_percentage)
+        remainder = self.pop_size - vaccinated - initial_infected
+        # remainder = self.pop_size - initial_infected
+        # print('remainders', remainder)
 
-        # for i in range(vaccinated):
-        #     people.append(Person(i + 1, True, None))
+        for i in range(vaccinated):
+            people.append(Person(i + 1, True, None))
         
         for i in range(initial_infected):
             self.total_infected += 1
@@ -113,9 +114,19 @@ class Simulation(object):
                 bool: True for simulation should continue, False if it should end.
         '''
         # TODO: Complete this helper method. Returns a Boolean.
-        return self.vacc_percentage < 1 or len(self.population) == self.total_infected
+        should_continue = True
+        if self.pop_size == self.total_vaccinated + self.total_dead:
+            should_continue = False
+        if self.total_infected == 0:
+            should_continue = False
+
+        return should_continue
+        
+        # return self.pop_size > (self.total_vaccinated + self.total_dead) or self.total_infected > 0
 
     def run(self):
+        self.logger.write_metadata(self.pop_size, self.vacc_percentage, self.virus.name, self.virus.mortality_rate, self.virus.repro_rate)
+
         ''' This method should run the simulation until all requirements for ending
         the simulation are met.
         '''
@@ -128,9 +139,9 @@ class Simulation(object):
         # TODO: Set this variable using a helper
         time_step_counter = 0
         # should_continue = None
-        should_continue = self._simulation_should_continue()
 
-        while time_step_counter < 1:
+        while self._simulation_should_continue():
+        # while time_step_counter < 5:
             # TODO: for every iteration of this loop, call self.time_step() to compute another
             # round of this simulation.
             self.time_step()
@@ -139,7 +150,7 @@ class Simulation(object):
             #     if person.infection:
             #         print(person.infection)
             time_step_counter += 1
-            pass
+
         print(f'The simulation has ended after {time_step_counter} turns.')
 
     def time_step(self):
@@ -160,10 +171,36 @@ class Simulation(object):
                 for interaction in range(100):
                     random_person = random.choice(self.population)
                     while not random_person.is_alive or random_person._id == person._id:
+                        # It doesn't count as an interaction if person is dead, or if person is the same person. 
                         random_person = random.choice(self.population)
                     self.interaction(person, random_person)
+                    # print('interaction#:', interaction + 1)
+                # check if they survived or not
+                if person.did_survive_infection():
+                    self.total_vaccinated += 1
+                    self.total_infected -= 1
+                else:
+                    if person not in self.dead_population:
+                        # remove dead from population, add them to dead_population
+                        # self.population.remove(person)
+                        self.dead_population.append(person)
+                        self.total_dead += 1
+                        self.total_infected -= 1
         
+        print('total vaccinated:', self.total_vaccinated)
+        print('total dead:', self.total_dead)
+        print('total infected:', self.total_infected)
+        print(len(self.population) == self.total_vaccinated + self.total_dead)
         self._infect_newly_infected()
+
+        
+        # Run person.did_survive_infection() here???? and increment dead count, and vaccinated or something?
+        
+        # for person in self.population:
+            
+        # print('vaccinated:', vaccinated, '/', self.pop_size)
+        # print(self.total_dead)
+
 
     def interaction(self, person, random_person):
         '''This method should be called any time two living people are selected for an
@@ -193,20 +230,22 @@ class Simulation(object):
         if random_person.is_vaccinated or random_person.infection:
             pass
             # print('is vacxxxed or already infected!')
-        # if random_person.infection == None and random_person.is_vaccinated == False:
-        else:
+        elif random_person.infection == None and random_person.is_vaccinated == False:
+        # else:
             randNum = random.uniform(0, 1)
             # print(randNum)
             if randNum < person.infection.repro_rate:
-                self.newly_infected.append(random_person._id)
-                self.total_infected += 1
+                # Why not add infection to random person here? 
+                # random_person.infection = person.infection
+                if random_person._id not in self.newly_infected:
+                    self.newly_infected.append(random_person._id)
+                    self.total_infected += 1
         
         # TODO: Call logger method during this method.
 
     def _infect_newly_infected(self):
         ''' This method should iterate through the list of ._id stored in self.newly_infected
         and update each Person object with the disease. '''
-        print(self.newly_infected)
         for id in self.newly_infected:
             for person in self.population:
                 if person._id == id:
@@ -231,13 +270,15 @@ if __name__ == "__main__":
         initial_infected = 1
 
     virus = Virus(virus_name, repro_rate, mortality_rate)
-    sim = Simulation(virus, pop_size, vacc_percentage, initial_infected)
+    sim = Simulation(pop_size, vacc_percentage, virus, initial_infected)
 
     sim.run()
 
 
 # RUN THIS TEST: python3 simulation.py 100000 0.90 Ebola 0.70 0.25 10
-# Smaller test: python3 simulation.py 100 0.90 Ebola 0.70 0.25 1
+# Smaller test: python3 simulation.py 100 0.10 Ebola 0.70 0.25 10
+
+
 
 """ 
 Population Size: 100,000

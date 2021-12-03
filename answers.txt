@@ -1,0 +1,4 @@
+-----------HERD IMMUNITY SIMULATION 12/03/2021 15:25:00------------
+
+Population Size: 100 | Initially Vaccinated %: 10.0 | Virus: Ebola | Mortality Rate: 0.7 | Reproductive Rate: 0.25
+
