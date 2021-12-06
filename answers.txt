@@ -1,4 +1,46 @@
------------HERD IMMUNITY SIMULATION 12/03/2021 15:25:00------------
+-----------HERD IMMUNITY SIMULATION 12/06/2021 15:14:02------------
 
-Population Size: 100 | Initially Vaccinated %: 10.0 | Virus: Ebola | Mortality Rate: 0.7 | Reproductive Rate: 0.25
+Population Size: 100
+Initially Vaccinated: 10.0%
+Initially Infected: 10
+Virus: Ebola
+Mortality Rate: 0.7
+Reproductive Rate: 0.25
 
+-------------------------------------------------------------
+-----------------------------
+Time step 2 ended, beginning 3
+Newly infected at time step 2: 23
+New deaths at time step 2: 13
+Total living: 68
+Total vaccinated: 42
+Total dead: 26
+-------------------------------------------------------------
+-----------------------------
+Time step 3 ended, beginning 4
+Newly infected at time step 3: 23
+New deaths at time step 3: 13
+Total living: 68
+Total vaccinated: 42
+Total dead: 26
+-------------------------------------------------------------
+-----------------------------
+Time step 4 ended, beginning 5
+Newly infected at time step 4: 23
+New deaths at time step 4: 13
+Total living: 68
+Total vaccinated: 42
+Total dead: 26
+-------------------------------------------------------------
+Person 12 survived infection
+Person 12 died from infection
+Person 12 did not infect person 24 because they are vaccinated.
+
+----------------------END OF SIMULATION----------------------
+Total living: 48
+Total dead: 24
+Number of vaccinations: 48
+Reason for simulation end: everyone is vaccinated
+Total number of interactions: 199
+Number of interactions resulting in vaccination: 50
+Number of interactions resulting in death: 82
