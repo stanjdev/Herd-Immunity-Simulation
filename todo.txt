@@ -2,29 +2,26 @@ https://github.com/Tech-at-DU/Herd-Immunity-Simulation
 
 To-do:
 
-- Finish self.logger.log_summary(total_living, self.total_dead, self.total_vaccinated, '', ) in simulation.py
-  - Maybe include a self.simulation_end_reason = '' string and set it once that while loop _simulation_should_continue is finished.
-  - have an interaction counter of those 100 interactions * each infected person? a counter?
-  - Of those interactions, need to separate the vaccinated and deaths
-
 Doing:
-- logger.py output specs: https://github.com/Tech-at-DU/Herd-Immunity-Simulation#questions-and-answers-about-the-problem 
 
 Done:
+- logger.py output specs: https://github.com/Tech-at-DU/Herd-Immunity-Simulation#questions-and-answers-about-the-problem 
 - include answers.txt
 - create_population
 - my simulation isn't updating things properly.
 - update counters and total vaccinated as time steps are going along
 - what should be in _simulation_should_continue() method? 
 self.dead_population = [] list, loop and skip dead people later on. tip from George 
+- Finish self.logger.log_summary(total_living, self.total_dead, self.total_vaccinated, '', ) in simulation.py
+  - Maybe include a self.simulation_end_reason = '' string and set it once that while loop _simulation_should_continue is finished.
+  - have an interaction counter of those 100 interactions * each infected person? a counter?
+  - Of those interactions, need to separate the vaccinated and deaths
 
 
 
 
 
-
-
-SCRATCH:
+SCRATCH NOTES:
 
 every sick person interacts with 100 other people in population. Only can infect uninfected, unvaccinated people. 
 The chance of a sick person infecting a person that they interact with is the virus's reproductive rate. 

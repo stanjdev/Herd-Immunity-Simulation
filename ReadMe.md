@@ -1,5 +1,17 @@
 # Final Project: Herd Immunity Simulation
 
+## HOW TO RUN SAMPLE SIMULATION:
+in terminal, `python3 simulation.py 10000 0.90 Ebola 0.70 0.25 10`
+ 
+Sample arguments in order:
+- Population Size: 10,000
+- Vaccination Percentage: 90%
+- Virus Name: Ebola
+- Mortality Rate: 70%
+- Reproduction Rate: 25%
+- People Initially Infected: 10
+
+#
 Imagine you have been hired at a new startup working on health and medicine or the World Health Organization.
 
 Your job is to create a simulation of herd immunity by modeling how a virus moves through a population where some (but not all) of a population is vaccinated against a virus.

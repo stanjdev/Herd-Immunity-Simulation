@@ -1,7 +1,5 @@
 import random
-# random.seed(42)
 from virus import Virus
-
 
 class Person(object):
     ''' Person objects will populate the simulation. '''

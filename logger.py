@@ -3,12 +3,6 @@ from person import Person
 
 class Logger(object):
     ''' Utility class responsible for logging all interactions during the simulation. '''
-    # TODO: Write a test suite for this class to make sure each method is working
-    # as expected.
-
-    # PROTIP: Write your tests before you solve each function, that way you can
-    # test them one by one as you write your class.
-
     def __init__(self, file_name):
         self.file_name = file_name
 
@@ -95,13 +89,13 @@ class Logger(object):
             "Time step {time_step_number} ended, beginning {time_step_number + 1}\n"
         '''
         file = open(self.file_name, 'a')
-        file.write(f'-----------------------------\n')
-        file.write(f'Time step {time_step_number} ended, beginning {time_step_number + 1}\n')
+        file.write(f'---------------Time step {time_step_number}----------------\n')
         file.write(f'Newly infected at time step {time_step_number}: {newly_infected}\n')
         file.write(f'New deaths at time step {time_step_number}: {newly_dead}\n')
         file.write(f'Total living: {total_living}\n')
         file.write(f'Total vaccinated: {total_vaccinated}\n')
         file.write(f'Total dead: {total_dead}\n')
+        file.write(f'Time step {time_step_number} ended, beginning {time_step_number + 1}\n')
         file.write(f'-------------------------------------------------------------\n')
         file.close()
 
