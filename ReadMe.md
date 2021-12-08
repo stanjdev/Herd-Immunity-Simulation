@@ -1,7 +1,7 @@
 # Final Project: Herd Immunity Simulation
 
 ## HOW TO RUN SAMPLE SIMULATION:
-in terminal, run `python3 simulation.py 10000 0.90 Ebola 0.70 0.25 10`
+In terminal, run `python3 simulation.py 10000 0.90 Ebola 0.70 0.25 10`
  
 Sample arguments in order:
 - Population Size: 10,000
